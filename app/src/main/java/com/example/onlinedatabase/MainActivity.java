@@ -25,12 +25,23 @@ public class MainActivity extends AppCompatActivity {
         dbHandler.addContact(braj);
 
         CONTACT devashish=new CONTACT("DevashishDhaulakhandi","6985478722");
-        dbHandler.addContact(arijit);
+        dbHandler.addContact(devashish);
+
+        devashish.setId(15);
+        devashish.setName("Deva Dhalu");
+        devashish.setContact("2456186206");
+        int affectedRows=dbHandler.updateContact(devashish);
+        Log.d("Affected Rows",""+affectedRows);
+
+
 
         List<CONTACT> allContacts=dbHandler.getAllContacts();
+        Log.d("SIZE_OF_CONTACTS",""+allContacts.size());
         for(CONTACT contact:allContacts){
             Log.d("ALL_TYPE_CONTACT",contact.getId()+" "+contact.getName()+" "+contact.getContact());
         }
+
+
 
     }
 }

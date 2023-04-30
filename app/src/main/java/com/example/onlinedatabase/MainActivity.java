@@ -41,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
             Log.d("ALL_TYPE_CONTACT",contact.getId()+" "+contact.getName()+" "+contact.getContact());
         }
 
+        int dr=dbHandler.deleteContact(16);
+        Log.d("Deleted Rows",""+dr);
+
+
 
 
     }

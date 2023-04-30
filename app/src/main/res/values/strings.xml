@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">OnlineDatabase</string>
+    <string name="contactName">Arijit Modak</string>
+    <string name="phoneNumber">6295401465</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="Cancel">Cancel</string>
+    <string name="Ok">Ok</string>
+    <string name="AddContact">Add Contact</string>
+    <string name="nameOfContact">Contact Name</string>
+    <string name="contactNumber">Contact No.</string>
+
 </resources>

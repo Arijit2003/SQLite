@@ -15,6 +15,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,8 +32,13 @@ import com.example.onlinedatabase.model.CONTACT;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
     private MyDBHandler dbHandler;
     private Boolean permission=false;
     private MyAdapter myAdapter;
+    private CircleImageView contactImage;
+    private Bitmap bitmap;
+
+    private byte[] byteArrayOut;
 
     private ActivityResultLauncher<String> phoneCallResultLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
@@ -51,6 +62,17 @@ public class MainActivity extends AppCompatActivity {
                     }else{
                         showAlertDialog("Phone Call permission denied","Not able to call anyone");
                         permission=false;
+                    }
+                }
+            });
+
+    private ActivityResultLauncher<String> galleryResultLauncher =
+            registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
+                @Override
+                public void onActivityResult(Uri result) {
+                    if(result!=null){
+                        contactImage.setImageURI(result);
+                        byteArrayOut=encodeImageUri(result);
                     }
                 }
             });
@@ -146,6 +168,14 @@ public class MainActivity extends AppCompatActivity {
         TextInputEditText contactNumberADDCON=dialog.findViewById(R.id.contactNumberADDCON);
         Button cancelButtonDialog=dialog.findViewById(R.id.cancelButtonDialog);
         Button okButtonDialog=dialog.findViewById(R.id.okButtonDialog);
+        contactImage = dialog.findViewById(R.id.contactImage);
+
+        contactImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                galleryResultLauncher.launch("image/*");
+            }
+        });
 
 
 
@@ -162,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
 
                 newContact.setName(contactNameADDCON.getText().toString().trim());
                 newContact.setContact(contactNumberADDCON.getText().toString().toString());
+                newContact.setByteArrayBlob(byteArrayOut);
 
                 dbHandler.addContact(newContact);
                 newContact.setId(dbHandler.getAllContacts().get(dbHandler.getAllContacts().size()-1).getId());
@@ -188,5 +219,29 @@ public class MainActivity extends AppCompatActivity {
         });
         alertDialog.create();
         alertDialog.show();
+    }
+
+    byte[] encodeImageUri(Uri result){
+
+        InputStream inputStream = null;
+        byte[] bytesOfImage;
+        try {
+            inputStream = getContentResolver().openInputStream(result);
+            bitmap = BitmapFactory.decodeStream(inputStream);
+            ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+            Bitmap resized;
+            if(bitmap.getWidth()>300 && bitmap.getHeight()>300) {
+                resized = Bitmap.createScaledBitmap(bitmap, 300, 300, true);
+            }
+            else{
+                resized=bitmap;
+            }
+            resized.compress(Bitmap.CompressFormat.JPEG,50,byteArrayOutputStream);
+
+            bytesOfImage=byteArrayOutputStream.toByteArray();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return bytesOfImage;
     }
 }

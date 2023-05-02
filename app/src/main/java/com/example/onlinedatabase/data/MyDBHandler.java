@@ -25,7 +25,8 @@ public class MyDBHandler extends SQLiteOpenHelper {
         String CREATE_TABLE="CREATE TABLE "+Params.DB_TABLE+ "("+
                 Params.ID+" INTEGER PRIMARY KEY,"+
                 Params.NAME+" TEXT,"+
-                Params.PHONE+" TEXT" + ")";
+                Params.PHONE+" TEXT," +
+                Params.IMAGE+" BLOB" +")";
         Log.d("OPEN_HELPER","SQL QUERY: "+CREATE_TABLE);
         sqLiteDatabase.execSQL(CREATE_TABLE);
 
@@ -38,8 +39,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
     public void addContact(CONTACT contact){
         SQLiteDatabase db=this.getWritableDatabase();
         ContentValues values = new ContentValues();
+
         values.put(Params.NAME.trim(),contact.getName());
         values.put(Params.PHONE.trim(),contact.getContact());
+        values.put(Params.IMAGE.trim(),contact.getByteArrayBlob());
 
         db.insert(Params.DB_TABLE,null,values);
 
@@ -58,6 +61,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
                 contact.setId(Integer.parseInt(cursor.getString(0)));
                 contact.setName(cursor.getString(1));
                 contact.setContact(cursor.getString(2));
+                contact.setByteArrayBlob(cursor.getBlob(3));
                 allContacts.add(contact);
             }while (cursor.moveToNext());
         }
@@ -72,6 +76,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(Params.NAME,contact.getName());
         values.put(Params.PHONE,contact.getContact());
+        values.put(Params.IMAGE,contact.getByteArrayBlob());
         return db.update(Params.DB_TABLE,values,Params.ID + "=?",
                 new String[]{String.valueOf(contact.getId())});
     }

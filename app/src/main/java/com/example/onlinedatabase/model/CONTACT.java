@@ -4,17 +4,28 @@ public class CONTACT {
     private int id;
     private String name;
     private String contact;
+    private byte[] byteArrayBlob;
 
     public CONTACT( String name, String contact) {
         this.name = name;
         this.contact = contact;
     }
 
-    public CONTACT(int id, String name, String contact) {
+    public CONTACT(int id, String name, String contact,byte[] byteArrayBlob) {
         this.id = id;
         this.name = name;
         this.contact = contact;
+        this.byteArrayBlob=byteArrayBlob;
     }
+
+    public byte[] getByteArrayBlob() {
+        return byteArrayBlob;
+    }
+
+    public void setByteArrayBlob(byte[] byteArrayBlob) {
+        this.byteArrayBlob = byteArrayBlob;
+    }
+
     public CONTACT(){
     }
 

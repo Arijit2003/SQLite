@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/dim_320"
+    android:layout_width="@dimen/dim_340"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
@@ -11,7 +11,7 @@
         android:layout_marginStart="@dimen/dim_26"
         android:layout_marginTop="@dimen/dim_16"
         android:layout_marginEnd="@dimen/dim_26"
-        android:layout_marginBottom="@dimen/dim_20"
+
         android:background="#7E501F"
         android:fontFamily="@font/poppins_medium"
         android:gravity="center"
@@ -20,6 +20,14 @@
         android:text="@string/AddContact"
         android:textColor="#fff"
         android:textSize="@dimen/font_size_20" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="@dimen/dim_120"
+        android:layout_height="@dimen/dim_120"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/dim_20"
+        android:src="@drawable/ic_launcher_background"
+        android:background="?selectableItemBackground"
+        android:id="@+id/contactImage"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"

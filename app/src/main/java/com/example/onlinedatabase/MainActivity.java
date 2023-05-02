@@ -5,6 +5,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +19,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private CircleImageView contactImage;
     private Bitmap bitmap;
 
-    private byte[] byteArrayOut;
+    private byte[] byteArrayOut=null;
 
     private ActivityResultLauncher<String> phoneCallResultLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
@@ -76,6 +79,9 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
+
+
+
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -192,13 +198,36 @@ public class MainActivity extends AppCompatActivity {
 
                 newContact.setName(contactNameADDCON.getText().toString().trim());
                 newContact.setContact(contactNumberADDCON.getText().toString().toString());
-                newContact.setByteArrayBlob(byteArrayOut);
+                if(byteArrayOut==null) {
+                    Drawable drawable = ResourcesCompat.getDrawable(getResources(),R.drawable.person3,null);
+                    BitmapDrawable bitmapDrawable =  (BitmapDrawable) drawable;
+
+                    assert bitmapDrawable != null;
+                    bitmap=bitmapDrawable.getBitmap();
+
+                    ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+                    Bitmap resized;
+                    if(bitmap.getWidth()>300 && bitmap.getHeight()>300) {
+                        resized = Bitmap.createScaledBitmap(bitmap, 300, 300, true);
+                    }
+                    else{
+                        resized=bitmap;
+                    }
+                    resized.compress(Bitmap.CompressFormat.JPEG,50,byteArrayOutputStream);
+
+                    byteArrayOut=byteArrayOutputStream.toByteArray();
+                    newContact.setByteArrayBlob(byteArrayOut);
+
+                }else{
+                    newContact.setByteArrayBlob(byteArrayOut);
+                }
 
                 dbHandler.addContact(newContact);
                 newContact.setId(dbHandler.getAllContacts().get(dbHandler.getAllContacts().size()-1).getId());
                 contactArrayList.add(newContact);
                 dialog.dismiss();
                 recyclerView.scrollToPosition(contactArrayList.size()-1);
+                byteArrayOut=null;
 
             }
         });

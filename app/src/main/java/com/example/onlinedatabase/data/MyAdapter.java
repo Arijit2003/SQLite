@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,6 +43,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         this.contactList=contactList;
         myDBHandler = new MyDBHandler(context);
     }
+
 
 
     @NonNull
@@ -142,6 +144,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 //
 //            }
 //        });
+
 
         cancelButtonDialog.setOnClickListener(new View.OnClickListener() {
             @Override
